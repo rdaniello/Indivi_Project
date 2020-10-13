@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>National Weight Control Registry - Data Exploration</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <style>
+        .tooltipData{
+            font-size: small;
+        }
+        #tooltip{
+            opacity: 0;
+            background-color: antiquewhite;
+            position: absolute;
+            width: 150px;
+            height: 50px;
+            padding: 5px;
+        }
+
+        #caption{
+            margin: auto;
+            padding-top: 1%;
+            padding-bottom: 1%;
+            padding-left: 4%;
+            font-family: serif;
+            font-size: 20pt;
+        }
+        #canvas
+        {
+            background-color: rgb(244, 248, 248);
+        }
+        path.path_geo{
+            stroke-width: .5px;
+            stroke: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="caption" class='text-center'>
+        National Weight Control Registry - Data Exploration
+    </div>
+    <div id=layerDiv>
+
+    </div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+            aria-selected="true">Explore Demographics</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+            aria-selected="false">Explore Strategies</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class='container'>
+                <div class="row">
+                    <div class='col-3'>
+                        <div class=row>
+                            <div style='border-radius: 10px; background-color: lightgrey; border-radius: 10px; padding:5px; margin-top: 15px;'>
+                                <div class='text-center'></div>
+                                <div class="dropdown text-center" style='padding-bottom:5px;'>
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Select Variable</b>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#">Age</a>
+                                        <a class="dropdown-item" href="#">Sex</a>
+                                        <a class="dropdown-item" href="#">Education</a>
+                                        <a class="dropdown-item" href="#">Ethnicity</a>
+                                    </div>
+                                </div>
+                                <div class='text-center' style='padding-top:5px; border-top:black 1px dashed'><b>Value Select</b></div>
+                                <div class="radio">
+                                    <label>
+                                    <input type="radio" name="survey" id="Radios1" value="Yes">
+                                    White
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                    <input type="radio" name="survey" id="Radios2" value="No">
+                                    Black - African American
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                    <input type="radio" name="survey" id="Radios2" value="No">
+                                    Asian
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                    <input type="radio" name="survey" id="Radios2" value="No">
+                                    Hispanic
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                    <input type="radio" name="survey" id="Radios2" value="No">
+                                    All
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class='col-4'>
+                        <div class='row'>  
+                            <img src='./linechart.jpg' style='object-fit:contain; width:100%; height:100%'>
+                        </div>
+                    </div>
+                    <div class='col-5'>
+                        <div id='container'>
+                            <svg id='canvas' viewbox='0 0 1000 800'></svg>
+                        </div>
+                    </div>
+                    <div id="tooltip"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class='container'>
+                <div class="row">
+                    <div class='col-3'>
+                        <div style='border-radius: 10px; background-color: lightgrey; border-radius: 10px; padding:5px; margin-top: 15px;'>
+                            <div class='text-center' style='padding-top:5px;'><b>Select Strategy</b></div>
+                            <div class="radio">
+                                <label>
+                                <input type="radio" name="survey" id="Radios1" value="Yes">
+                                Eat Breakfast
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input type="radio" name="survey" id="Radios2" value="No">
+                                Exercise
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input type="radio" name="survey" id="Radios2" value="No">
+                                Self Weigh Regularly
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input type="radio" name="survey" id="Radios2" value="No">
+                                Diet Plan
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input type="radio" name="survey" id="Radios2" value="No">
+                                Medication
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-9'>
+                        <div id='container2'>
+                            <img src='./barchart.png' style='object-fit:contain; width:50%;'>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    <script>
+        // function to filter out territories not on map
+        // makes color scale more accurate
+        function filterStates(data){
+            for(var i = 0; i < data.length; i++){
+                let tmpS = data[i].state;
+                if(tmpS == 'Virgin Islands' 
+                    || tmpS == 'Puerto Rico' 
+                    || tmpS == 'Guam' 
+                    || tmpS == 'Northern Mariana Islands'){
+                        data.splice(i,1);
+                        i--;
+                }
+            }
+            return data;
+        }
+    </script>
+    <script>
+        let geoData = null
+        let covidData = null
+        let colorScaleCases = null
+        let colorScaleDeaths = null
+        let svg = d3.select('svg');
+        // get the covid and map data and build map -- call main
+        let covidCSV = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-states.csv';
+        let geoJson = 'data/us_state_5m_topo.json';
+        let projection = d3.geoAlbersUsa()
+            .scale(1300)
+            .translate([500,400]);
+        Promise.all(
+            [
+                d3.json(geoJson),
+                d3.csv(covidCSV)
+            ], d3.autoType())
+            .then(main)
+
+        // function to color each layer when drop down value changes
+        function updateLayer(val){
+            let caption = d3.select('#caption');
+            d3.selectAll('path')
+                .transition()
+                    .delay(function (d,i){return i*10})
+                    .duration(800)
+                .style('fill', function(d){
+                        try{
+                            if(val == 1){
+                                caption.text('National Weight Control Registry - Data Exploration');
+                                return colorScaleCases(parseInt(covidData.get(d.properties.NAME)[0].cases));
+                            }
+                            else{
+                                caption.text('National Weight Control Registry - Data Exploration');
+                                return colorScaleDeaths(parseInt(covidData.get(d.properties.NAME)[0].deaths));
+                            }
+                        }
+                        catch{
+                            return 'white';
+                    }
+                });
+        }
+
+        // builds the map from passed data
+        function main(data){
+            // filter out territories not on map
+            data[1] = filterStates(data[1]);
+            geoData = topojson.feature(data[0], data[0].objects.cb_2018_us_state_5m).features;
+            let geo_generator = d3.geoPath().projection(projection);
+            covidData = d3.group(data[1], function(d){return d.state});
+
+            // filter out territories not on map
+            let cases_extent = d3.extent(data[1], function (d){ return +d.cases});
+            let deaths_extent = d3.extent(data[1], function (d){ return +d.deaths});
+
+            // get the color scale
+            colorScaleCases = d3.scaleLog()
+                .domain(cases_extent)
+                .range(["white","steelblue"])
+                .interpolate(d3.interpolateHcl);
+            colorScaleDeaths = d3.scaleLog()
+                .domain(deaths_extent)
+                .range(["yellow","darkred"])
+                .interpolate(d3.interpolateHcl);
+            
+            // map canvas
+            let mapCanvas = svg.append('g')
+                                .attr('id','mapCanvas')
+            // the paths - the work
+            mapCanvas.selectAll('path')
+                .data(geoData)
+                .enter()
+                .append('path')
+                .attr('class', 'path_geo')
+                .attr('d', geo_generator)
+                .attr('fill', 'white')
+                // tool tip
+                .on('mousemove', function(mouseData,d){
+                    d3.select('#tooltip')
+                        .style('opacity', .8)
+                        .style('left', (mouseData.clientX+10).toString() + 'px')
+                        .style('top', (mouseData.clientY+10).toString() + 'px')
+                        .html(
+                            "<div class='tooltipData'>State: "+covidData.get(d.properties.NAME)[0].state+"</div>" +
+                            "<div class='tooltipData' style='color:blue'>Cases: "+covidData.get(d.properties.NAME)[0].cases.toString()+"</div>" +
+                            "<div class='tooltipData' style='color:red'>Deaths: "+covidData.get(d.properties.NAME)[0].deaths.toString()+"</div>")
+                })
+                .transition()
+                .delay(function (d,i){return i*20})
+                .duration(800)
+                .style('fill', function(d){
+                    try{
+                        return colorScaleCases(parseInt(covidData.get(d.properties.NAME)[0].cases));
+                    }
+                    catch{
+                        return 'white';
+                    }
+                });
+
+            svg.call(d3.zoom()
+                .extent([[0,0],[1000,800]])
+                .scaleExtent([1,8])
+                .on("zoom", zoomed)
+            )
+            function zoomed({transform}){
+                mapCanvas.attr("transform", transform);
+            }   
+        }
+    </script>
+</body>
+</html>
