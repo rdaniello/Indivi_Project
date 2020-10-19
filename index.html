@@ -11,36 +11,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <style>
-        .tooltipData{
-            font-size: small;
-        }
-        #tooltip{
-            opacity: 0;
-            background-color: antiquewhite;
-            position: absolute;
-            width: 150px;
-            height: 50px;
-            padding: 5px;
-        }
+    <link rel="stylesheet" href='./styles.css' type="text/css">
 
-        #caption{
-            margin: auto;
-            padding-top: 1%;
-            padding-bottom: 1%;
-            padding-left: 4%;
-            font-family: serif;
-            font-size: 20pt;
-        }
-        #canvas
-        {
-            background-color: rgb(244, 248, 248);
-        }
-        path.path_geo{
-            stroke-width: .5px;
-            stroke: black;
-        }
-    </style>
 </head>
 <body>
     <div id="caption" class='text-center'>
@@ -51,88 +23,55 @@
     </div>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+          <a class="nav-link active" id="demo-tab" data-toggle="tab" href="#demo" role="tab" aria-controls="demo"
             aria-selected="true">Explore Demographics</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#strat" role="tab" aria-controls="strat"
             aria-selected="false">Explore Strategies</a>
         </li>
       </ul>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div class='container'>
-                <div class="row">
+      <div class="tab-content" id="myTabContent" style='padding-top:10px; '>
+        <div class="tab-pane fade show active" id="demo" role="tabpanel" aria-labelledby="demo-tab" >
+            <div class='container-fluid' >
+                <div class="row"  >
                     <div class='col-3'>
-                        <div class=row>
-                            <div style='border-radius: 10px; background-color: lightgrey; border-radius: 10px; padding:5px; margin-top: 15px;'>
-                                <div class='text-center'></div>
-                                <div class="dropdown text-center" style='padding-bottom:5px;'>
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <b>Select Variable</b>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Age</a>
-                                        <a class="dropdown-item" href="#">Sex</a>
-                                        <a class="dropdown-item" href="#">Education</a>
-                                        <a class="dropdown-item" href="#">Ethnicity</a>
-                                    </div>
-                                </div>
-                                <div class='text-center' style='padding-top:5px; border-top:black 1px dashed'><b>Value Select</b></div>
-                                <div class="radio">
-                                    <label>
-                                    <input type="radio" name="survey" id="Radios1" value="Yes">
-                                    White
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                    <input type="radio" name="survey" id="Radios2" value="No">
-                                    Black - African American
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                    <input type="radio" name="survey" id="Radios2" value="No">
-                                    Asian
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                    <input type="radio" name="survey" id="Radios2" value="No">
-                                    Hispanic
-                                    </label>
-                                </div>
-                                <div class="radio">
-                                    <label>
-                                    <input type="radio" name="survey" id="Radios2" value="No">
-                                    All
-                                    </label>
-                                </div>
-                            </div>
+                        <div class="row" style='margin:10px'>
+                            <div class="select" style='padding-right: 10px;'> 
+                                <select name="slct" id="slct" onchange='demoDDChange(value)'> 
+                                    <option value="1">Gender</option> 
+                                    <option value="2">Education</option> 
+                                    <option value="3">Age</option> 
+                                    <option value="4">Maritial Status</option> 
+                                    <option value="5">Race</option> 
+                                    <option value="6">Ethnicity</option> 
+                                </select> 
+                            </div> 
                         </div>
-                        
+                        <!-- Demo selection divs added dyanmically here -->
+                        <div id='demoOptions' class='text-center' style='padding-top:5px; '></div>
                     </div>
                     <div class='col-4'>
                         <div class='row'>  
-                            <img src='./linechart.jpg' style='object-fit:contain; width:100%; height:100%'>
+                            <svg id='main' width=100% height=100% viewbox="0 0 1000 800" style="background-color:rgba(228, 225, 222, 0.288);"></svg>
                         </div>
                     </div>
-                    <div class='col-5'>
+                    <div class='col-4'>
                         <div id='container'>
-                            <svg id='canvas' viewbox='0 0 1000 800'></svg>
+                            <svg id='canvasDemo' viewbox='0 0 1000 800' style="background-color:rgba(228, 225, 222, 0.288);" ></svg>
                         </div>
                     </div>
                     <div id="tooltip"></div>
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade" id="strat" role="tabpanel" aria-labelledby="strat-tab">
             <div class='container'>
                 <div class="row">
                     <div class='col-3'>
                         <div style='border-radius: 10px; background-color: lightgrey; border-radius: 10px; padding:5px; margin-top: 15px;'>
                             <div class='text-center' style='padding-top:5px;'><b>Select Strategy</b></div>
+                            <!-- These don't change and are hard coded into the html-->
                             <div class="radio">
                                 <label>
                                 <input type="radio" name="survey" id="Radios1" value="Yes">
@@ -175,89 +114,182 @@
         </div>
       </div>
     <script>
-        // function to filter out territories not on map
-        // makes color scale more accurate
-        function filterStates(data){
-            for(var i = 0; i < data.length; i++){
-                let tmpS = data[i].state;
-                if(tmpS == 'Virgin Islands' 
-                    || tmpS == 'Puerto Rico' 
-                    || tmpS == 'Guam' 
-                    || tmpS == 'Northern Mariana Islands'){
-                        data.splice(i,1);
-                        i--;
-                }
-            }
-            return data;
-        }
-    </script>
-    <script>
+        let selDemoVar = 'tot';
         let geoData = null
-        let covidData = null
-        let colorScaleCases = null
-        let colorScaleDeaths = null
-        let svg = d3.select('svg');
-        // get the covid and map data and build map -- call main
-        let covidCSV = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-states.csv';
-        let geoJson = 'data/us_state_5m_topo.json';
+        let mapData = null
+        let lineData = null
+        let dRadData = null
+        let colorScaleTot = null
+        let mapDataArr = null
+        let geo_generator = null
+
+        let svgDemo = d3.select('#canvasDemo');
+        // get the data and build map -- call main
+        let mapCSV = 'data/map_data.csv'; // map demo data
+        let lineCSV = 'data/time_data.csv'
+        let geoJson = 'data/us_state_5m_topo.json'; // geojson map
+        let demoRadio = 'data/d_radio.csv'; // demo radio buttons
         let projection = d3.geoAlbersUsa()
             .scale(1300)
             .translate([500,400]);
         Promise.all(
             [
                 d3.json(geoJson),
-                d3.csv(covidCSV)
+                d3.csv(mapCSV),
+                d3.csv(demoRadio),
+                d3.csv(lineCSV)
             ], d3.autoType())
             .then(main)
 
-        // function to color each layer when drop down value changes
-        function updateLayer(val){
-            let caption = d3.select('#caption');
-            d3.selectAll('path')
-                .transition()
-                    .delay(function (d,i){return i*10})
-                    .duration(800)
-                .style('fill', function(d){
-                        try{
-                            if(val == 1){
-                                caption.text('National Weight Control Registry - Data Exploration');
-                                return colorScaleCases(parseInt(covidData.get(d.properties.NAME)[0].cases));
-                            }
-                            else{
-                                caption.text('National Weight Control Registry - Data Exploration');
-                                return colorScaleDeaths(parseInt(covidData.get(d.properties.NAME)[0].deaths));
-                            }
-                        }
-                        catch{
-                            return 'white';
+        // initializes global variables from passed data
+        function main(data){
+            geoData = topojson.feature(data[0], data[0].objects.cb_2018_us_state_5m).features;
+            geo_generator = d3.geoPath().projection(projection);
+            totData = d3.group(data[1], function(d){return d.state});
+            dRadData = data[2];
+            mapDataArr = data[1];
+            lineData = data[3];
+
+            // auto type not working for dates
+            var fixDate = d3.timeParse('%Y-%M');
+            lineData.forEach(element => {
+                element['date']= fixDate(element['date']);
+            });
+
+            d3.json("https://raw.githubusercontent.com/umassdgithub/Sample_Data/main/MASS_TOPO.json").then(function (data){
+                console.log(data);
+
+
+            })
+
+            let X = [0,1,2,3,4,5,6,7,8,9]
+            let f = d3.extent(d3.map(X,function(d,i){return d*i}))
+            console.log('f= ' + f);
+            console.log(totData);
+            console.log(geoData);
+            console.log(dRadData);
+            console.log(lineData);
+            demoDDChange('1');  // populate demo dropdown
+        }
+
+        function updateLineVis(val){
+            // select svg element
+            let svg = d3.select('svg#main');
+            let margins = {x:100, y:100};
+
+            // update the select variable to the display value
+            svg.selectAll('g')
+                .remove();
+            selDemoVar = val;
+            lineData.forEach(element => {
+                element['display']= +element[selDemoVar];
+            });
+
+            // get the data and svg element extent (range and domain)
+            // viewbox - range
+
+            let rng = svg.attr('viewBox').split(' ');
+            rng = d3.map(rng, function(d){return parseInt(d)});
+            console.log(rng);
+            let xRng = [rng[0] + margins.x, rng[2] - margins.x];
+            let yRng = [rng[3] - margins.y, rng[1] + margins.y];
+
+            // data, date - domain
+            let date_extent = d3.extent(lineData,
+                function (d){return d.date})
+            let display_extent = d3.extent(lineData,
+                function (d){return d.display})
+            console.log(date_extent);
+            console.log(display_extent);
+            // set 0 as min
+            display_extent[0] = 0;
+
+            // make the X and Y scale
+            let xScale = d3.scaleTime().domain(date_extent).range(xRng)
+            let yScale  = d3.scaleLinear().domain(display_extent).range(yRng)
+
+            // make line generators
+            let demo_line = d3.line()   
+                .x(function(d){return xScale(d.date)})
+                .y(function(d){return yScale(d.display)})
+                .curve(d3.curveMonotoneX) 
+            
+            // add path element to svg
+            let fig = svg.append('g');
+            fig.data([lineData]);
+            fig.append('path').attr('d', function(d){ return demo_line(d)})
+                .attr("class", "cost")
+            
+            
+            // add the axis
+            let xAxis = svg.append('g')
+                .attr('class',"axisStyle")
+                .attr('transform', 'translate('+(0)+','+(yRng[0])+")")
+                .call(d3.axisBottom(xScale));
+            let yAxis = svg.append('g')
+                .attr('class',"axisStyle")
+                .attr('transform', 'translate('+(margins.x)+','+(0)+")")
+                .call(d3.axisLeft(yScale));
+
+            // styling - done inline or with css
+            fig.selectAll("line-circle")
+                .data(lineData)
+                .enter()
+                .append("circle")
+                .attr("class", "data-circle")
+                .attr("r", 5)
+                .attr("cx", function(d) { return xScale(d.date); })
+                .attr("cy", function(d) { return yScale(d.display); })
+                .attr('fill', 'red')
+                .on('mousemove', function(mouseData,d){
+                    try{
+                    d3.select('#tooltip')
+                        .style('width', '100px')
+                        .style('height', '25px')
+                        .style('opacity', .8)
+                        .style('left', (mouseData.clientX+10).toString() + 'px')
+                        .style('top', (mouseData.clientY+10).toString() + 'px')
+                        .html(
+                            "<div class='tooltipData'>" + "Value: " + d.display+"</div>" )
+                    }
+                    catch{
+                        console.log("tooltip error");
                     }
                 });
         }
 
-        // builds the map from passed data
-        function main(data){
-            // filter out territories not on map
-            data[1] = filterStates(data[1]);
-            geoData = topojson.feature(data[0], data[0].objects.cb_2018_us_state_5m).features;
-            let geo_generator = d3.geoPath().projection(projection);
-            covidData = d3.group(data[1], function(d){return d.state});
+        // function to update demo data tab - map and line chart
+        function updateDemo(val){
+            // update selected variable appearance
+            d3.selectAll('.demoDiv')
+                .each(function(d){
+                    let tmpDiv = d3.select(this);
+                    if(d.val == val){
+                        tmpDiv.attr('style','opacity:1; font-weight:bold;');
+                    }
+                    else{
+                        tmpDiv.attr('style','opacity:.5; font-weight:normal;');
+                    }
+                })
 
-            // filter out territories not on map
-            let cases_extent = d3.extent(data[1], function (d){ return +d.cases});
-            let deaths_extent = d3.extent(data[1], function (d){ return +d.deaths});
+            // remove all paths
+            svgDemo.selectAll('g')
+                .remove();
+            selDemoVar = val;
+            totData.forEach(element => {
+                element[0]['display']= element[0][selDemoVar];
+            });
+
+            let tot_extent = d3.extent(mapDataArr, function (d){ return +d.display});
 
             // get the color scale
-            colorScaleCases = d3.scaleLog()
-                .domain(cases_extent)
+            colorScaleTot = d3.scaleLinear()
+                .domain(tot_extent)
                 .range(["white","steelblue"])
-                .interpolate(d3.interpolateHcl);
-            colorScaleDeaths = d3.scaleLog()
-                .domain(deaths_extent)
-                .range(["yellow","darkred"])
                 .interpolate(d3.interpolateHcl);
             
             // map canvas
-            let mapCanvas = svg.append('g')
+            let mapCanvas = svgDemo.append('g')
                                 .attr('id','mapCanvas')
             // the paths - the work
             mapCanvas.selectAll('path')
@@ -269,35 +301,61 @@
                 .attr('fill', 'white')
                 // tool tip
                 .on('mousemove', function(mouseData,d){
+                    try{
                     d3.select('#tooltip')
+                        .style('width', '150px')
+                        .style('height', '50px')
                         .style('opacity', .8)
                         .style('left', (mouseData.clientX+10).toString() + 'px')
                         .style('top', (mouseData.clientY+10).toString() + 'px')
                         .html(
-                            "<div class='tooltipData'>State: "+covidData.get(d.properties.NAME)[0].state+"</div>" +
-                            "<div class='tooltipData' style='color:blue'>Cases: "+covidData.get(d.properties.NAME)[0].cases.toString()+"</div>" +
-                            "<div class='tooltipData' style='color:red'>Deaths: "+covidData.get(d.properties.NAME)[0].deaths.toString()+"</div>")
+                            "<div class='tooltipData'>State: "+ d.properties.NAME+"</div>" +
+                            "<div class='tooltipData' style='color:blue'>Value: "+ totData.get(d.properties.STUSPS)[0].display.toString()+"</div>")
+                    }
+                    catch{
+                        console.log("tooltip error");
+                    }
                 })
                 .transition()
                 .delay(function (d,i){return i*20})
                 .duration(800)
                 .style('fill', function(d){
                     try{
-                        return colorScaleCases(parseInt(covidData.get(d.properties.NAME)[0].cases));
+                        return colorScaleTot(parseInt(totData.get(d.properties.STUSPS)[0].display));
                     }
                     catch{
-                        return 'white';
+                        return 'blue';
+                        console.log('map fill error');
                     }
                 });
 
-            svg.call(d3.zoom()
+            svgDemo.call(d3.zoom()
                 .extent([[0,0],[1000,800]])
                 .scaleExtent([1,8])
                 .on("zoom", zoomed)
             )
             function zoomed({transform}){
                 mapCanvas.attr("transform", transform);
-            }   
+            } 
+
+            updateLineVis(val);
+        }
+
+        function demoDDChange(val){
+            d3.selectAll('.demoDiv').remove(); // remove current demo radio buttons
+            let demoDD = d3.select('#demoOptions') // get div to add radio buttons to
+            demoDD.selectAll('div')
+                .data(dRadData)
+                .enter()
+                .filter(function(d) { return d.democlass == val})
+                .append('div') // add a div for each radio to add
+                .attr('class', 'radio demoDiv text-left')
+                .attr('onclick', function(d) { return "updateDemo('" + d.val + "')"})
+                .text(function(d){return d.text})
+                ;
+                
+            updateDemo('tot'); // update map
+            updateLineVis('tot'); // update line chart
         }
     </script>
 </body>

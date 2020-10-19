@@ -1,0 +1,37 @@
+﻿democlass,text,val
+1,All,tot
+1,Male,male
+1,Female,female
+2,All,tot
+2,Grammer School,gs
+2,Junior High School,jh
+2,High School,hs
+2,Vocational Training,vt
+2,Some College,sc
+2,Bachelor Degree,bs
+2,Masters or Higher Degree,ms
+3,All,tot
+3,Under 20,alt20
+3,20 -29,a20
+3,30 - 39,a30
+3,40 - 49,a40
+3,50 - 59,a50
+3,60 - 69,a60
+3,70+,a70
+4,All,tot
+4,Married,m
+4,Seperated,s
+4,Divorced,d
+4,Widowed,w
+4,Not Married,nm
+4,Other,moth
+5,All,tot
+5,Native American,ai
+5,Asian,asian
+5,Pacific Islander,pi
+5,Black,bl
+5,White,wh
+5,Other,roth
+6,All,tot
+6,Hispanic,hisp
+6,Non Hispanic,nhisp
