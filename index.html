@@ -155,16 +155,7 @@
             lineData.forEach(element => {
                 element['date']= fixDate(element['date']);
             });
-
-            d3.json("https://raw.githubusercontent.com/umassdgithub/Sample_Data/main/MASS_TOPO.json").then(function (data){
-                console.log(data);
-
-
-            })
-
-            let X = [0,1,2,3,4,5,6,7,8,9]
-            let f = d3.extent(d3.map(X,function(d,i){return d*i}))
-            console.log('f= ' + f);
+            
             console.log(totData);
             console.log(geoData);
             console.log(dRadData);
