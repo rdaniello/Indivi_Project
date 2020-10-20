@@ -1,2 +1,12 @@
-tot,comm,phs,pt,dr,exclass,med,surg,nohelp,diet,pa
-9888,2608,534,1123,1126,2531,511,277,3638,1990,7660
+name,total
+tot,9888
+comm,2608
+phs,534
+pt,1123
+dr,1126
+exclass,2531
+med,511
+surg,277
+nohelp,3638
+diet,1990
+pa,7660

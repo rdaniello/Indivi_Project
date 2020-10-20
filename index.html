@@ -23,20 +23,21 @@
     </div>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="demo-tab" data-toggle="tab" href="#demo" role="tab" aria-controls="demo"
+          <a class="nav-link" id="demo-tab" data-toggle="tab" href="#demo" role="tab" aria-controls="demo"
             aria-selected="true">Explore Demographics</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#strat" role="tab" aria-controls="strat"
+          <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#strat" role="tab" aria-controls="strat"
             aria-selected="false">Explore Strategies</a>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent" style='padding-top:10px; '>
-        <div class="tab-pane fade show active" id="demo" role="tabpanel" aria-labelledby="demo-tab" >
+        <div class="tab-pane fade " id="demo" role="tabpanel" aria-labelledby="demo-tab" >
             <div class='container-fluid' >
-                <div class="row"  >
-                    <div class='col-3'>
-                        <div class="row" style='margin:10px'>
+                <div class="row" style='margin-bottom:15px'>
+                    <div class='col-2'>&nbsp;</div>
+                    <div class='col-2' style= 'border:1px solid steelblue; border-radius:10px; margin-left:10px'>
+                        <div class="row" style='margin:10px;'>
                             <div class="select" style='padding-right: 10px;'> 
                                 <select name="slct" id="slct" onchange='demoDDChange(value)'> 
                                     <option value="1">Gender</option> 
@@ -49,64 +50,99 @@
                             </div> 
                         </div>
                         <!-- Demo selection divs added dyanmically here -->
-                        <div id='demoOptions' class='text-center' style='padding-top:5px; '></div>
+                        <div id='demoOptions' class='text-center' style='padding-top:5px; padding-left:10px '></div>
                     </div>
-                    <div class='col-4'>
-                        <div class='row'>  
-                            <svg id='main' width=100% height=100% viewbox="0 0 1000 800" style="background-color:rgba(228, 225, 222, 0.288);"></svg>
+                    <div class='col-6'style = 'margin-left:15px'>
+                        <div class='row' style="background-color:rgb(247, 244, 241); border-radius: 10px; border:1px solid steelblue; padding:5px">  
+                            <svg id='main' width=100% height=100% viewbox="0 0 1000 400" style="background-color:rgb(247, 244, 241)"></svg>
                         </div>
                     </div>
-                    <div class='col-4'>
-                        <div id='container'>
-                            <svg id='canvasDemo' viewbox='0 0 1000 800' style="background-color:rgba(228, 225, 222, 0.288);" ></svg>
+                    <div id="tooltip" class="tooltip"></div>
+                </div>
+                <div class=row>
+                    <div class='col-8 offset-2'>
+                        <div id='row'  style="background-color:rgb(247, 244, 241); border-radius: 10px; padding:5px; border-radius: 10px; border:1px solid steelblue;">
+                            <svg id='canvasDemo' width=100% height=100% viewbox='0 0 1000 800' style="background-color:rgb(247, 244, 241);" ></svg>
                         </div>
                     </div>
-                    <div id="tooltip"></div>
+                    <div id="tooltip2" class="tooltip"></div>
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="strat" role="tabpanel" aria-labelledby="strat-tab">
-            <div class='container'>
+        <div class="tab-pane fade show active" id="strat" role="tabpanel" aria-labelledby="strat-tab">
+            <div class='container-fluid'>
                 <div class="row">
-                    <div class='col-3'>
+                    <div class='col-4'>
                         <div style='border-radius: 10px; background-color: lightgrey; border-radius: 10px; padding:5px; margin-top: 15px;'>
-                            <div class='text-center' style='padding-top:5px;'><b>Select Strategy</b></div>
+                            <div class='text-center' style='padding-top:5px;'><b><u>Weight LossStrategy</u></b></div>
                             <!-- These don't change and are hard coded into the html-->
                             <div class="radio">
                                 <label>
-                                <input type="radio" name="survey" id="Radios1" value="Yes">
-                                Eat Breakfast
+                                <input class="checkbox" type="checkbox" id="Radios1" value="comm" onclick='updateStrat(this.value)'>
+                                Commerical Weight Loss Program
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                <input type="radio" name="survey" id="Radios2" value="No">
-                                Exercise
+                                <input class="checkbox" type="checkbox" id="Radios2" value="phs" onclick='updateStrat(this.value)'>
+                                Psychologist
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                <input type="radio" name="survey" id="Radios2" value="No">
-                                Self Weigh Regularly
+                                <input class="checkbox" type="checkbox" id="Radios3" value="pt" onclick='updateStrat(this.value)'>
+                                Doctor
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                <input type="radio" name="survey" id="Radios2" value="No">
+                                <input class="checkbox" type="checkbox" id="Radios4" value="dr" onclick='updateStrat(this.value)'>
+                                Personal Trainer
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input class="checkbox" type="checkbox"id="Radios5" value="exclass" onclick='updateStrat(this.value)'>
+                                Exercise Class
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input class="checkbox" type="checkbox" id="Radios6" value="med" onclick='updateStrat(this.value)'>
+                                Weight Loss Medication
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input class="checkbox" type="checkbox" id="Radios7" value="surg" onclick='updateStrat(this.value)'>
+                                Surgery
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input class="checkbox" type="checkbox" id="Radios8" value="nohelp" onclick='updateStrat(this.value)'>
+                                No Help
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                <input class="checkbox" type="checkbox" id="Radios9" value="diet" onclick='updateStrat(this.value)'>
                                 Diet Plan
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                <input type="radio" name="survey" id="Radios2" value="No">
-                                Medication
+                                <input class="checkbox" type="checkbox" name="survey" id="Radios10" value="pa" onclick='updateStrat(this.value)'>
+                                Physical Activity
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class='col-9'>
+                    <div class='col-8'>
                         <div id='container2'>
-                            <img src='./barchart.png' style='object-fit:contain; width:50%;'>
+                            <div class='row'>
+                                <svg id='canvasStrat' width=100% height=100% viewbox='0 0 1000 800' style="background-color:rgb(247, 244, 241);" ></svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,6 +155,7 @@
         let mapData = null
         let lineData = null
         let dRadData = null
+        let stratData = null
         let colorScaleTot = null
         let mapDataArr = null
         let geo_generator = null
@@ -126,7 +163,8 @@
         let svgDemo = d3.select('#canvasDemo');
         // get the data and build map -- call main
         let mapCSV = 'data/map_data.csv'; // map demo data
-        let lineCSV = 'data/time_data.csv'
+        let lineCSV = 'data/time_data.csv'; // demo time data
+        let stratCSV = 'data/strat_data.csv'; // strategy data
         let geoJson = 'data/us_state_5m_topo.json'; // geojson map
         let demoRadio = 'data/d_radio.csv'; // demo radio buttons
         let projection = d3.geoAlbersUsa()
@@ -137,7 +175,8 @@
                 d3.json(geoJson),
                 d3.csv(mapCSV),
                 d3.csv(demoRadio),
-                d3.csv(lineCSV)
+                d3.csv(lineCSV),
+                d3.csv(stratCSV)
             ], d3.autoType())
             .then(main)
 
@@ -149,18 +188,149 @@
             dRadData = data[2];
             mapDataArr = data[1];
             lineData = data[3];
+            stratData = data[4];
 
             // auto type not working for dates
             var fixDate = d3.timeParse('%Y-%M');
             lineData.forEach(element => {
                 element['date']= fixDate(element['date']);
             });
+
+            stratData.forEach(element =>{
+                element['total'] = parseInt(element['total']);
+            });
             
-            console.log(totData);
+            console.log(stratData);
+            /* console.log(totData);
+            
             console.log(geoData);
             console.log(dRadData);
-            console.log(lineData);
+            console.log(lineData); */
             demoDDChange('1');  // populate demo dropdown
+        }
+
+        function updateStrat(val){
+            // get all the checked boxes
+            let barMargin = 25;
+            let selVars = [];
+            let boxes = d3.selectAll('input.checkbox:checked');
+            boxes
+                .each(function(){
+                    selVars.push(this.value);
+                })
+            
+            // select svg element
+            let svg = d3.select('svg#canvasStrat');
+            let margins = {x:100, y:100};
+
+            // update the select variable to the display value
+            svg.selectAll('g')
+                .remove();
+            
+            // get the data and svg element extent (range and domain)
+            // viewbox - range
+            let rng = svg.attr('viewBox').split(' ');
+            rng = d3.map(rng, function(d){return parseInt(d)});
+            let xRng = [rng[0] + margins.x, rng[2] - margins.x];
+            let yRng = [rng[3] - margins.y, rng[1] + margins.y];
+            let height = parseInt(rng[3]);
+            let width = parseInt(rng[2]);
+            
+            // number of selected strats and number - domain
+            let name_extent = d3.extent(stratData,
+                function (d){
+                    if(selVars.includes(d.name)){
+                        return d.name;
+                    }
+                })
+            let total_extent = d3.extent(stratData,
+                function (d){
+                    if(selVars.includes(d.name)){
+                        return d.total;
+                    }
+                })
+            total_extent[0] = 0;
+
+            // make the X and Y scale
+            let xScale = d3.scaleBand()
+                .domain(selVars)
+                .range(xRng)
+            let yScale  = d3.scaleLinear().domain(total_extent).range(yRng)
+            let colorscale = d3.scaleSequential()
+                .domain([0, stratData.length])
+                .interpolator(d3.interpolateRainbow);
+
+            // strat canvas
+            let stratCanvas = svg.append('g')
+                                .attr('id','stratCanvas');
+            
+            // add the bars
+            stratCanvas.selectAll('rect')
+                .data(stratData)
+                .enter()
+                .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
+                    .append("rect")
+                    .attr("x", function(d) { return xScale.bandwidth() - barMargin })
+                    .attr("y", function(d) { return height - yScale(d.total) - margins.y})
+                    .attr("width", xScale.bandwidth() - barMargin)
+                    .transition()
+                        .delay(1)
+                        .duration(500)
+                    .attr("x", function(d) { return xScale(d.name) + barMargin / 2; })
+                    .attr("y", function(d) { return yScale(d.total); })
+                    .attr("width", xScale.bandwidth() - barMargin)
+                    .attr("height", function(d) { return height - yScale(d.total) - margins.y })
+                    .attr('fill', function(d,i){return colorscale(i)})
+
+            // add labels to the data
+            stratCanvas.selectAll('text')
+                .data(stratData)
+                .enter()
+                .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
+                    .append("text")
+                    .text(function(d){return(d.total)})
+                    .style('font-size','18px')
+                    .attr("x", function(d) { return xScale(d.name) + xScale.bandwidth() /2; })
+                    .attr("y", function(d) { return height })
+                    .transition()
+                        .delay(1)
+                        .duration(750)
+                    .attr("x", function(d) { return xScale(d.name) + xScale.bandwidth() /2; })
+                    .attr("y", function(d) { return yScale(d.total) + 20; })
+                    .attr('fill', 'white')
+                    .style("text-anchor", "middle") 
+
+            // add the axis
+            let xAxis = svg.append('g')
+                .attr('class',"axisStyle")
+                .attr('transform', 'translate('+(0)+','+(yRng[0])+")")
+                .call(d3.axisBottom(xScale))
+                .selectAll('text')
+                    .attr("dx", "-0.4em")
+                    .attr("dy", "1.24em")
+                    .attr("transform", "rotate(-16)" )
+            let yAxis = svg.append('g')
+                .attr('class',"axisStyle")
+                .attr('transform', 'translate('+(margins.x)+','+(0)+")")
+                .call(d3.axisLeft(yScale));
+
+            // add the axis labels
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 + margins.y /8)
+                .attr("x",0 - height / 2)
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .style('font-size','20px')
+                .style('font-weight','bold')
+                .text("# of Participants");
+            svg.append("text")             
+                .attr("y", height - margins.y /8)
+                .attr("x", width / 2)
+                .style("text-anchor", "middle")
+                .style('font-size','20px')
+                .style('font-weight','bold')
+                .text("Strategy Used");
         }
 
         function updateLineVis(val){
@@ -178,10 +348,8 @@
 
             // get the data and svg element extent (range and domain)
             // viewbox - range
-
             let rng = svg.attr('viewBox').split(' ');
             rng = d3.map(rng, function(d){return parseInt(d)});
-            console.log(rng);
             let xRng = [rng[0] + margins.x, rng[2] - margins.x];
             let yRng = [rng[3] - margins.y, rng[1] + margins.y];
 
@@ -190,8 +358,8 @@
                 function (d){return d.date})
             let display_extent = d3.extent(lineData,
                 function (d){return d.display})
-            console.log(date_extent);
-            console.log(display_extent);
+            /* console.log(date_extent);
+            console.log(display_extent); */
             // set 0 as min
             display_extent[0] = 0;
 
@@ -206,11 +374,21 @@
                 .curve(d3.curveMonotoneX) 
             
             // add path element to svg
-            let fig = svg.append('g');
+            let fig = svg.append('g')
             fig.data([lineData]);
-            fig.append('path').attr('d', function(d){ return demo_line(d)})
-                .attr("class", "cost")
-            
+            fig.append('path')
+                .attr('d', function(d){ return demo_line(d)})
+                .attr( 'stroke','steelblue')
+                .attr( 'stroke-width','0')
+                .transition()
+                .delay(100)
+                .duration(750)
+                .attr( 'stroke-width','6')
+                .transition()
+                .delay(100)
+                .duration(750)
+                .attr( 'stroke-width','1')
+
             
             // add the axis
             let xAxis = svg.append('g')
@@ -228,25 +406,49 @@
                 .enter()
                 .append("circle")
                 .attr("class", "data-circle")
-                .attr("r", 5)
+                .attr("r", 25)
                 .attr("cx", function(d) { return xScale(d.date); })
                 .attr("cy", function(d) { return yScale(d.display); })
-                .attr('fill', 'red')
-                .on('mousemove', function(mouseData,d){
+                .attr('fill', 'steelblue')
+                .on('mouseenter', function(mouseData,d){
                     try{
-                    d3.select('#tooltip')
-                        .style('width', '100px')
-                        .style('height', '25px')
-                        .style('opacity', .8)
-                        .style('left', (mouseData.clientX+10).toString() + 'px')
-                        .style('top', (mouseData.clientY+10).toString() + 'px')
-                        .html(
-                            "<div class='tooltipData'>" + "Value: " + d.display+"</div>" )
+                        d3.select(this)
+                            .style('fill','red')
+                            .style('stroke','steelblue')
+                            .style('stroke-width','3')
+                            .style('r','10')
+                        d3.select('#tooltip')
+                            .style('display', 'block')
+                            .style('width', '100px')
+                            .style('height', '25px')
+                            .style('opacity', 1)
+                            .style('background-color','rgba(228, 225, 222, 0)')
+                            .style('left', (mouseData.clientX+10).toString() + 'px')
+                            .style('top', (mouseData.clientY+10).toString() + 'px')
+                            .html(
+                                "<div class='tooltipData'>"  + d.display+"</div>" )
                     }
                     catch{
                         console.log("tooltip error");
                     }
-                });
+                })
+                .on('mouseleave', function(mouseData,d){
+                    try{
+                        d3.select(this)
+                            .style('fill','steelblue')
+                            .style('stroke-width','0')
+                            .style('r','5');
+                        d3.select('#tooltip')
+                            .style('display', 'none')
+                    }
+                    catch{
+                        console.log("tooltip error");
+                    }
+                })
+                .transition()
+                .delay(100)
+                .duration(1000)
+                .attr("r", 5);
         }
 
         // function to update demo data tab - map and line chart
@@ -291,17 +493,34 @@
                 .attr('d', geo_generator)
                 .attr('fill', 'white')
                 // tool tip
-                .on('mousemove', function(mouseData,d){
+                .on('mouseenter', function(mouseData,d){
                     try{
-                    d3.select('#tooltip')
-                        .style('width', '150px')
-                        .style('height', '50px')
-                        .style('opacity', .8)
-                        .style('left', (mouseData.clientX+10).toString() + 'px')
-                        .style('top', (mouseData.clientY+10).toString() + 'px')
-                        .html(
-                            "<div class='tooltipData'>State: "+ d.properties.NAME+"</div>" +
-                            "<div class='tooltipData' style='color:blue'>Value: "+ totData.get(d.properties.STUSPS)[0].display.toString()+"</div>")
+                        d3.select(this)
+                            .style('stroke','red')
+                            .style('stroke-width','3');
+                        d3.select('#tooltip2')
+                            .style('display', 'block')
+                            .style('width', '150px')
+                            .style('height', '50px')
+                            .style('background-color','rgba(228, 225, 222, 1)')
+                            .style('opacity', .8)
+                            .style('left', (mouseData.clientX+10).toString() + 'px')
+                            .style('top', (mouseData.clientY+10).toString() + 'px')
+                            .html(
+                                "<div class='tooltipData'>State: "+ d.properties.NAME+"</div>" +
+                                "<div class='tooltipData' style='color:blue'>Value: "+ totData.get(d.properties.STUSPS)[0].display.toString()+"</div>")
+                    }
+                    catch{
+                        console.log("tooltip error");
+                    }
+                })
+                .on('mouseleave', function(mouseData,d){
+                    try{
+                        d3.select(this)
+                            .style('stroke','black')
+                            .style('stroke-width','.5');
+                        d3.select('#tooltip2')
+                            .style('display', 'none')
                     }
                     catch{
                         console.log("tooltip error");
@@ -343,6 +562,25 @@
                 .attr('class', 'radio demoDiv text-left')
                 .attr('onclick', function(d) { return "updateDemo('" + d.val + "')"})
                 .text(function(d){return d.text})
+                .on('mouseenter', function(mouseData,d){
+                    try{
+                        d3.select(this)
+                            .style('background-color','rgb(247, 244, 241)')
+                            .style('border-radius','5px')
+                            .style('border','solid 1px black');
+                    }
+                    catch{
+                    }
+                })
+                .on('mouseleave', function(mouseData,d){
+                    try{
+                        d3.select(this)
+                            .style('background-color','rgba(0,0,0,0)')
+                            .style('border','solid 0px black');
+                    }
+                    catch{
+                    }
+                })
                 ;
                 
             updateDemo('tot'); // update map
