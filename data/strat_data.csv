@@ -1,12 +1,12 @@
-name,total
-tot,9888
-comm,2608
-phs,534
-pt,1123
-dr,1126
-exclass,2531
-med,511
-surg,277
-nohelp,3638
-diet,1990
-pa,7660
+name,total,labeltxt
+tot,9888,total
+comm,2608,Comm WL
+phs,534,Psyc
+pt,1123,Per Trainer
+dr,1126,Dr
+exclass,2531,Ex Class
+med,511,Meds
+surg,277,Surg
+nohelp,3638,No Help
+diet,1990,Dieting
+pa,7660,Phys Act

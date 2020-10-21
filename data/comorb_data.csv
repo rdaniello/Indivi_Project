@@ -1,2 +1,6 @@
-tot,dep,hyper,thryoid,diabetes
-9888,1115,1132,1095,262
+name,total,labeltxt
+tot,9888,Total
+dep,1115,Depression
+hyper,1132,HyperTension
+thryoid,1095,Thryoid
+diabetes,262,Diabetes
