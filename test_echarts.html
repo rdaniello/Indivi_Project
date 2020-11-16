@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+        <meta charset="utf-8">
+        <script src="https://d3js.org/d3.v6.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+   </head>
+   <body style="height: 100%; margin: 0">
+        <div class='row' style="height: 40vh; border:solid 1px black">
+            <div class='col-10 offset-1'>
+                <div id="container" style="height: 100%; border:solid 1px black"></div>
+            </div>
+        </div>
+       
+
+       <script type="text/javascript">
+            var dom = document.getElementById("container");
+            var myChart = echarts.init(dom);
+            var app = {};
+            option = null;
+
+            let echartsCSV = 'data/time_data2.csv'; // map demo data
+            let echartsX = [];
+            let echartsY = [];
+            Promise.all(
+            [
+                d3.csv(echartsCSV)
+            ], d3.autoType())
+            .then(main)
+
+            function main(data){
+                //console.log(data);
+                // split the data set
+                data[0].forEach(element => {
+                    console.log(element['date']);
+                    echartsX.push(element['date']);
+                    echartsY.push(element['tot']);
+                });
+                console.log(echartsX);
+
+                var base = +new Date(1968, 9, 3);
+                var oneDay = 24 * 3600 * 1000;
+                var date = [];
+                var data = [Math.random() * 300];
+
+                for (var i = 1; i < 20000; i++) {
+                    var now = new Date(base += oneDay);
+                    date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
+                    data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
+                }
+
+                option = {
+                    grid: {
+                        bottom: 100
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function (pt) {
+                            return [pt[0], '10%'];
+                        },
+                        backgroundColor: 'rgb(228, 225, 222)'
+                    },
+                    title: {
+                        left: 'center',
+                        text: 'Participant Growth',
+                    },
+                    toolbox: {
+                        feature: {
+                            restore: {title:'Restore'},
+                            saveAsImage: {title:'Save'},
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: echartsX,
+                        nameLocation: 'middle',
+                        nameGap: 50,
+                        name: 'Date'
+                    },
+                    yAxis: {
+                        type: 'value',
+                        boundaryGap: [0, '100%'],
+                        nameLocation: 'middle',
+                        nameGap: 50,
+                        name: '# of Particpants'
+                    },
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 0,
+                        end: 100
+                    }, {
+                        start: 0,
+                        end: 100,
+                        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                        handleSize: '100%',
+                        handleStyle: {
+                            color: '#fff',
+                            shadowBlur: 3,
+                            shadowColor: 'rgba(0, 0, 0, 0.6)',
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        }
+                    }],
+                    series: [
+                        {
+                            name: 'Participants',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'none',
+                            sampling: 'average',
+                            itemStyle: {
+                                color: 'rgb(70, 130, 180)'
+                            },
+                            areaStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgb(70, 130, 180)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgb(228, 225, 222)'
+                                }])
+                            },
+                            data: echartsY
+                        }
+                    ]
+                };
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                    window.onresize = function() {
+                        myChart.resize();
+                    };
+                }
+            }
+       </script>
+   </body>
+</html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>National Weight Control Registry - Data Exploration</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <!-- Bootstrap CSS -->
@@ -35,7 +36,7 @@
       <div class="tab-content" id="myTabContent" style='padding-top:10px; '>
         <div class="tab-pane fade  show active" id="demo" role="tabpanel" aria-labelledby="demo-tab" >
             <div class='container-fluid' >
-                <div class="row" style='margin-bottom:15px;'>
+                <div class="row" style='margin-bottom:15px; height:40vh'>
                     <div class='col-2'>&nbsp;</div>
                     <div class='col-2' style= 'border:1px solid steelblue; border-radius:10px; margin-left:10px'>
                         <div class="row" style='margin:10px;'>
@@ -53,9 +54,9 @@
                         <!-- Demo selection divs added dyanmically here -->
                         <div id='demoOptions' class='text-center' style='padding-top:5px; padding-left:10px '></div>
                     </div>
-                    <div class='col-6 d-flex'style = 'margin-left:15px'>
-                        <div class='row' style="background-color:rgb(247, 244, 241); border-radius: 10px; border:1px solid steelblue; padding:5px; width:100%">  
-                            <svg id='main' width=100% height=100% viewbox="0 0 1000 400" style="background-color:rgb(247, 244, 241)"></svg>
+                    <div class='col-6 d-flex'style = 'margin-left:15px;'>
+                        <div id='linechart' class='row' style="background-color:rgb(247, 244, 241); border-radius: 10px; border:1px solid steelblue; padding:5px; width:100%">  
+                            
                         </div>
                     </div>
                     <div id="tooltip" class="tooltip"></div>
@@ -204,6 +205,8 @@
         let colorScaleTot = null
         let mapDataArr = null
         let geo_generator = null
+        let echartsX = [];
+        let echartsY = [];
 
         let svgDemo = d3.select('#canvasDemo');
         // get the data and build map -- call main
@@ -213,6 +216,7 @@
         let comorbCSV = 'data/comorb_data.csv'; // comorbitity data
         let geoJson = 'data/us_state_5m_topo.json'; // geojson map
         let demoRadio = 'data/d_radio.csv'; // demo radio buttons
+        let echartsCSV = 'data/time_data2.csv';
         let projection = d3.geoAlbersUsa()
             .scale(1300)
             .translate([500,400]);
@@ -223,7 +227,8 @@
                 d3.csv(demoRadio),
                 d3.csv(lineCSV),
                 d3.csv(stratCSV),
-                d3.csv(comorbCSV)
+                d3.csv(comorbCSV),
+                d3.csv(echartsCSV)
             ], d3.autoType())
             .then(main)
 
@@ -234,15 +239,15 @@
             totData = d3.group(data[1], function(d){return d.state});
             dRadData = data[2];
             mapDataArr = data[1];
-            lineData = data[3];
+            lineData = data[6];
             stratData = data[4];
             comorbData = data[5];
 
             // auto type not working for dates
-            var fixDate = d3.timeParse('%Y-%M');
+            /* var fixDate = d3.timeParse('%Y-%M');
             lineData.forEach(element => {
                 element['date']= fixDate(element['date']);
-            });
+            }); */
 
             stratData.forEach(element =>{
                 element['total'] = parseInt(element['total']);
@@ -316,6 +321,7 @@
             let yRng = [rng[3] - margins.y, rng[1] + margins.y];
             let height = parseInt(rng[3]);
             let width = parseInt(rng[2]);
+            let totPart = comorbData[0].total;
             
             // number of selected comorbidities and number - domain
             let name_extent = d3.extent(comorbData,
@@ -331,6 +337,7 @@
                     }
                 })
             total_extent[0] = 0;
+            total_extent[1] = 1;
 
             // make the X and Y scale
             let xScale = d3.scaleBand()
@@ -352,24 +359,24 @@
                 .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
                     .append("rect")
                     .attr("x", function(d) { return xScale.bandwidth() - barMargin })
-                    .attr("y", function(d) { return height - yScale(d.total) - margins.y})
+                    .attr("y", function(d) { return height - yScale(d.total/totPart) - margins.y})
                     .attr("width", xScale.bandwidth() - barMargin)
                     .transition()
                         .delay(1)
                         .duration(500)
                     .attr("x", function(d) { return xScale(d.labeltxt) + barMargin / 2; })
-                    .attr("y", function(d) { return yScale(d.total); })
+                    .attr("y", function(d) { return yScale(d.total/totPart); })
                     .attr("width", xScale.bandwidth() - barMargin)
-                    .attr("height", function(d) { return height - yScale(d.total) - margins.y })
+                    .attr("height", function(d) { return height - yScale(d.total/totPart) - margins.y })
                     .attr('fill', function(d,i){return colorscale(i)})
 
             // add value labels to bars
             comorbCanvas.selectAll('text')
                 .data(comorbData)
                 .enter()
-                .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
+                .filter(function(d){return selVars.includes(d.name)})
                     .append("text")
-                    .text(function(d){return(d.total)})
+                    .text(function(d){return(d.total/totPart)})
                     .style('font-size','18px')
                     .attr("x", function(d) { return xScale(d.labeltxt) + xScale.bandwidth() /2; })
                     .attr("y", function(d) { return height })
@@ -377,7 +384,7 @@
                         .delay(1)
                         .duration(750)
                     .attr("x", function(d) { return xScale(d.labeltxt) + xScale.bandwidth() /2; })
-                    .attr("y", function(d) { return yScale(d.total) + 20; })
+                    .attr("y", function(d) { return yScale(d.total/totPart) + 20; })
                     .attr('fill', 'white')
                     .style("text-anchor", "middle") 
 
@@ -571,121 +578,103 @@
         }
 
         function updateLineVis(val){
-            // select svg element
-            let svg = d3.select('svg#main');
-            let margins = {x:100, y:100};
-
-            // update the select variable to the display value
-            svg.selectAll('g')
-                .remove();
-            selDemoVar = val;
+            // get the requested data
+            echartsX = [];
+            echartsY = [];
             lineData.forEach(element => {
-                element['display']= +element[selDemoVar];
-            });
+                    echartsX.push(element['date']);
+                    echartsY.push(element[val]);
+                });
+                console.log(val);
+                console.log(echartsX);
+                console.log(echartsY);
 
-            // get the data and svg element extent (range and domain)
-            // viewbox - range
-            let rng = svg.attr('viewBox').split(' ');
-            rng = d3.map(rng, function(d){return parseInt(d)});
-            let xRng = [rng[0] + margins.x, rng[2] - margins.x];
-            let yRng = [rng[3] - margins.y, rng[1] + margins.y];
-
-            // data, date - domain
-            let date_extent = d3.extent(lineData,
-                function (d){return d.date})
-            let display_extent = d3.extent(lineData,
-                function (d){return d.display})
-            /* console.log(date_extent);
-            console.log(display_extent); */
-            // set 0 as min
-            display_extent[0] = 0;
-
-            // make the X and Y scale
-            let xScale = d3.scaleTime().domain(date_extent).range(xRng)
-            let yScale  = d3.scaleLinear().domain(display_extent).range(yRng)
-
-            // make line generators
-            let demo_line = d3.line()   
-                .x(function(d){return xScale(d.date)})
-                .y(function(d){return yScale(d.display)})
-                .curve(d3.curveMonotoneX) 
-            
-            // add path element to svg
-            let fig = svg.append('g')
-            fig.data([lineData]);
-            fig.append('path')
-                .attr('d', function(d){ return demo_line(d)})
-                .attr( 'stroke','steelblue')
-                .attr( 'stroke-width','0')
-                .transition()
-                .delay(100)
-                .duration(750)
-                .attr( 'stroke-width','6')
-                .transition()
-                .delay(100)
-                .duration(750)
-                .attr( 'stroke-width','1')
-
-            
-            // add the axis
-            let xAxis = svg.append('g')
-                .attr('class',"axisStyle")
-                .attr('transform', 'translate('+(0)+','+(yRng[0])+")")
-                .call(d3.axisBottom(xScale));
-            let yAxis = svg.append('g')
-                .attr('class',"axisStyle")
-                .attr('transform', 'translate('+(margins.x)+','+(0)+")")
-                .call(d3.axisLeft(yScale));
-
-            // styling - done inline or with css
-            fig.selectAll("line-circle")
-                .data(lineData)
-                .enter()
-                .append("circle")
-                .attr("class", "data-circle")
-                .attr("r", 25)
-                .attr("cx", function(d) { return xScale(d.date); })
-                .attr("cy", function(d) { return yScale(d.display); })
-                .attr('fill', 'steelblue')
-                .on('mouseenter', function(mouseData,d){
-                    try{
-                        d3.select(this)
-                            .style('fill','red')
-                            .style('stroke','steelblue')
-                            .style('stroke-width','3')
-                            .style('r','10')
-                        d3.select('#tooltip')
-                            .style('display', 'block')
-                            .style('width', '100px')
-                            .style('height', '25px')
-                            .style('opacity', 1)
-                            .style('background-color','rgba(228, 225, 222, 0)')
-                            .style('left', (mouseData.clientX+10).toString() + 'px')
-                            .style('top', (mouseData.clientY+10).toString() + 'px')
-                            .html(
-                                "<div class='tooltipData'>"  + d.display+"</div>" )
+            var dom = document.getElementById("linechart");
+            var myChart = echarts.init(dom);
+            var app = {};
+            option = null;
+            option = {
+                grid: {
+                    bottom: 100
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    position: function (pt) {
+                        return [pt[0], '10%'];
+                    },
+                    backgroundColor: 'rgb(228, 225, 222)'
+                },
+                title: {
+                    left: 'center',
+                    text: 'Participant Growth',
+                },
+                toolbox: {
+                    feature: {
+                        restore: {title:'Restore'},
+                        saveAsImage: {title:'Save'},
                     }
-                    catch{
-                        console.log("tooltip error");
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: echartsX,
+                    nameLocation: 'middle',
+                    nameGap: 50,
+                    name: 'Date'
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%'],
+                    nameLocation: 'middle',
+                    nameGap: 50,
+                    name: '# of Particpants'
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    start: 0,
+                    end: 100
+                }, {
+                    start: 0,
+                    end: 100,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '100%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
                     }
-                })
-                .on('mouseleave', function(mouseData,d){
-                    try{
-                        d3.select(this)
-                            .style('fill','steelblue')
-                            .style('stroke-width','0')
-                            .style('r','5');
-                        d3.select('#tooltip')
-                            .style('display', 'none')
+                }],
+                series: [
+                    {
+                        name: 'Participants',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        itemStyle: {
+                            color: 'rgb(70, 130, 180)'
+                        },
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: 'rgb(70, 130, 180)'
+                            }, {
+                                offset: 1,
+                                color: 'rgb(228, 225, 222)'
+                            }])
+                        },
+                        data: echartsY
                     }
-                    catch{
-                        console.log("tooltip error");
-                    }
-                })
-                .transition()
-                .delay(100)
-                .duration(1000)
-                .attr("r", 5);
+                ]
+            };
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+                window.onresize = function() {
+                    myChart.resize();
+                };
+            }
         }
 
         // function to update demo data tab - map and line chart
