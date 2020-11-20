@@ -337,7 +337,7 @@
                     }
                 })
             total_extent[0] = 0;
-            total_extent[1] = 1;
+            total_extent[1] = 100;
 
             // make the X and Y scale
             let xScale = d3.scaleBand()
@@ -359,15 +359,15 @@
                 .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
                     .append("rect")
                     .attr("x", function(d) { return xScale.bandwidth() - barMargin })
-                    .attr("y", function(d) { return height - yScale(d.total/totPart) - margins.y})
+                    .attr("y", function(d) { return height - yScale((d.total/totPart) * 100) - margins.y})
                     .attr("width", xScale.bandwidth() - barMargin)
                     .transition()
                         .delay(1)
                         .duration(500)
                     .attr("x", function(d) { return xScale(d.labeltxt) + barMargin / 2; })
-                    .attr("y", function(d) { return yScale(d.total/totPart); })
+                    .attr("y", function(d) { return yScale((d.total/totPart) * 100); })
                     .attr("width", xScale.bandwidth() - barMargin)
-                    .attr("height", function(d) { return height - yScale(d.total/totPart) - margins.y })
+                    .attr("height", function(d) { return height - yScale((d.total/totPart) * 100) - margins.y })
                     .attr('fill', function(d,i){return colorscale(i)})
 
             // add value labels to bars
@@ -376,7 +376,7 @@
                 .enter()
                 .filter(function(d){return selVars.includes(d.name)})
                     .append("text")
-                    .text(function(d){return(d.total/totPart)})
+                    .text(function(d){return(((d.total/totPart) * 100)).toFixed(1) + '%'})
                     .style('font-size','18px')
                     .attr("x", function(d) { return xScale(d.labeltxt) + xScale.bandwidth() /2; })
                     .attr("y", function(d) { return height })
@@ -384,8 +384,8 @@
                         .delay(1)
                         .duration(750)
                     .attr("x", function(d) { return xScale(d.labeltxt) + xScale.bandwidth() /2; })
-                    .attr("y", function(d) { return yScale(d.total/totPart) + 20; })
-                    .attr('fill', 'white')
+                    .attr("y", function(d) { let tmpy = yScale((d.total/totPart) * 100) + 20; console.log(tmpy); if(tmpy > 700){tmpy=700};return tmpy; })
+                    .attr('fill', 'steelblue')
                     .style("text-anchor", "middle") 
 
             // add the axis
@@ -412,7 +412,7 @@
                 .style('font-size','20px')
                 .style('font-weight','bold')
                 .style('fill','steelblue')
-                .text("# of Participants");
+                .text("% of Participants");
             svg.append("text")             
                 .attr("y", height - margins.y /8)
                 .attr("x", width / 2)
@@ -430,7 +430,7 @@
                 .style('font-size','26px')
                 .style('font-weight','bold')
                 .style('fill','steelblue')
-                .text("# of Participants With Comorbity");
+                .text("% of Participants With Comorbity");
         }
 
         function updateStrat(val){
@@ -467,6 +467,7 @@
             let yRng = [rng[3] - margins.y, rng[1] + margins.y];
             let height = parseInt(rng[3]);
             let width = parseInt(rng[2]);
+            let totPart = stratData[0].total;
             
             // number of selected strats and number - domain
             let name_extent = d3.extent(stratData,
@@ -482,6 +483,7 @@
                     }
                 })
             total_extent[0] = 0;
+            total_extent[1] = 100;
 
             // make the X and Y scale
             let xScale = d3.scaleBand()
@@ -503,15 +505,15 @@
                 .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
                     .append("rect")
                     .attr("x", function(d) { return xScale.bandwidth() - barMargin })
-                    .attr("y", function(d) { return height - yScale(d.total) - margins.y})
+                    .attr("y", function(d) { return height - yScale((d.total/totPart) * 100) - margins.y})
                     .attr("width", xScale.bandwidth() - barMargin)
                     .transition()
                         .delay(1)
                         .duration(500)
                     .attr("x", function(d) { return xScale(d.labeltxt) + barMargin / 2; })
-                    .attr("y", function(d) { return yScale(d.total); })
+                    .attr("y", function(d) { return yScale((d.total/totPart) * 100); })
                     .attr("width", xScale.bandwidth() - barMargin)
-                    .attr("height", function(d) { return height - yScale(d.total) - margins.y })
+                    .attr("height", function(d) { return height - yScale((d.total/totPart) * 100) - margins.y })
                     .attr('fill', function(d,i){return colorscale(i)})
 
             // add value labels to bars
@@ -520,7 +522,7 @@
                 .enter()
                 .filter(function(d){ console.log(d.name + " " + d.total);return selVars.includes(d.name)})
                     .append("text")
-                    .text(function(d){return(d.total)})
+                    .text(function(d){return(((d.total/totPart) * 100)).toFixed(1) + '%'})
                     .style('font-size','18px')
                     .attr("x", function(d) { return xScale(d.labeltxt) + xScale.bandwidth() /2; })
                     .attr("y", function(d) { return height })
@@ -528,8 +530,8 @@
                         .delay(1)
                         .duration(750)
                     .attr("x", function(d) { return xScale(d.labeltxt) + xScale.bandwidth() /2; })
-                    .attr("y", function(d) { return yScale(d.total) + 20; })
-                    .attr('fill', 'white')
+                    .attr("y", function(d) { let tmpy = yScale((d.total/totPart) * 100) + 20; console.log(tmpy); if(tmpy > 700){tmpy=700};return tmpy; })
+                    .attr('fill', 'steelblue')
                     .style("text-anchor", "middle") 
 
             // add the axis
@@ -556,7 +558,7 @@
                 .style('font-size','20px')
                 .style('font-weight','bold')
                 .style('fill','steelblue')
-                .text("# of Participants");
+                .text("% of Participants");
             svg.append("text")             
                 .attr("y", height - margins.y /8)
                 .attr("x", width / 2)
@@ -574,7 +576,7 @@
                 .style('font-size','26px')
                 .style('font-weight','bold')
                 .style('fill','steelblue')
-                .text("# of Participants using Strategy");
+                .text("% of Participants using Strategy");
         }
 
         function updateLineVis(val){
